@@ -1,4 +1,4 @@
-PYPY_VERSION = 3.7-v7.3.3
+PYPY_VERSION = 3.7-v7.3.4
 BUILD = 1
 VERSION = $(PYPY_VERSION)-build$(BUILD)
 
@@ -15,18 +15,31 @@ image_name:
 	@echo ${DOCKER_REGISTRY}/${PACKAGE}:${VERSION}
 
 force-build:
-	docker build --no-cache -t ${PACKAGE}:${VERSION} .
+	docker build -f Dockerfile.binary --no-cache -t ${PACKAGE}:${VERSION} .
 	docker tag ${PACKAGE}:${VERSION} ${PACKAGE}:latest
 	docker tag ${PACKAGE}:${VERSION} ${PACKAGE}:${PYPY_VERSION}
 	docker image prune -f
 
 build:
-	docker build -t ${PACKAGE}:${VERSION} .
+	docker build -f Dockerfile.binary -t ${PACKAGE}:${VERSION} .
+	docker tag ${PACKAGE}:${VERSION} ${PACKAGE}:latest
+	docker tag ${PACKAGE}:${VERSION} ${PACKAGE}:${PYPY_VERSION}
+	docker image prune -f
+
+force-build-src:
+	docker build -f Dockerfile.src --no-cache -t ${PACKAGE}:${VERSION} .
+	docker tag ${PACKAGE}:${VERSION} ${PACKAGE}:latest
+	docker tag ${PACKAGE}:${VERSION} ${PACKAGE}:${PYPY_VERSION}
+	docker image prune -f
+
+build-src:
+	docker build -f Dockerfile.src -t ${PACKAGE}:${VERSION} .
 	docker tag ${PACKAGE}:${VERSION} ${PACKAGE}:latest
 	docker tag ${PACKAGE}:${VERSION} ${PACKAGE}:${PYPY_VERSION}
 	docker image prune -f
 
 tag:
+	docker tag ${PACKAGE}:${VERSION} ${REPOSITORY}:latest
 	docker tag ${PACKAGE}:${VERSION} ${REPOSITORY}:${VERSION}
 	docker tag ${PACKAGE}:${VERSION} ${REPOSITORY}:${PYPY_VERSION}
 

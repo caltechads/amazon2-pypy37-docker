@@ -51,7 +51,7 @@ RUN yum install -y amazon-linux-extras && \
     # Set up the UTF-8 locale so that shelling into the container won't spam you with locale errors.
     localedef -i en_US -f UTF-8 en_US.UTF-8
 
-# Build and install our pypy-3.7
+# Build and install our pypy-3.6
 # See: https://pypy.readthedocs.io/en/latest/build.html
 WORKDIR /usr/src
 RUN wget --no-check-certificate -c https://downloads.python.org/pypy/pypy${PYPY3_VERSION}-src.tar.bz2 && \

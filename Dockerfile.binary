@@ -51,19 +51,14 @@ RUN yum install -y amazon-linux-extras && \
     # Set up the UTF-8 locale so that shelling into the container won't spam you with locale errors.
     localedef -i en_US -f UTF-8 en_US.UTF-8
 
-# Build and install our pypy-3.7
+# Build and install our pypy-3.6
 # See: https://pypy.readthedocs.io/en/latest/build.html
-WORKDIR /usr/src
-RUN wget --no-check-certificate -c https://downloads.python.org/pypy/pypy${PYPY3_VERSION}-src.tar.bz2 && \
-    tar jxf pypy${PYPY3_VERSION}-src.tar.bz2 && \
-    cd pypy${PYPY3_VERSION}-src/pypy/goal && \
-    pypy ../../rpython/bin/rpython --opt=jit
-RUN cd pypy${PYPY3_VERSION}-src/pypy/goal && \
-    PYTHONPATH=../.. ./pypy3-c ../../lib_pypy/pypy_tools/build_cffi_imports.py && \
-    cd ../tool/release && \
-    ./package.py --archive-name=pypy${PYPY3_VERSION}-amazon2
-RUN mv /tmp/usession-release-pypy${PYPY3_VERSION}*-current/build/pypy${PYPY3_VERSION}-amazon2 /opt/pypy && \
-    /opt/pypy/bin/pypy3 -m ensurepip
+WORKDIR /opt
+RUN wget --no-check-certificate -c https://downloads.python.org/pypy/pypy${PYPY3_VERSION}-linux64.tar.bz2 && \
+    tar jxf pypy${PYPY3_VERSION}-linux64.tar.bz2 && \
+    mkdir -p /opt/pypy/ && \
+    ln -s /opt/pypy${PYPY3_VERSION}-linux64/bin /opt/pypy && \
+    /opt/pypy/bin/pypy -m ensurepip
 
 ENV PATH /opt/pypy/bin:$PATH
 

@@ -1,9 +1,9 @@
 version: '3'
 
 services:
-  pypy36:
-    image: pypy36:latest
-    container_name: "pypy36"
-    hostname: pypy36
+  pypy:
+    image: amazon2-pypy37:latest
+    container_name: "amazon2-pypy37"
+    hostname: amazon2-pypy37
     stdin_open: true
     tty: true
